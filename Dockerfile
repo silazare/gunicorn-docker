@@ -1,12 +1,13 @@
-FROM python:2.7-slim
+FROM python:3.7-slim-buster
 
-RUN pip install gunicorn json-logging-py
+WORKDIR /app
+ADD requirements.txt /app
 
-COPY logging.conf /logging.conf
-COPY gunicorn.conf /gunicorn.conf
+RUN set -ex && \
+    pip install -r requirements.txt
 
-COPY myapp.py /
+ADD myapp.py *.conf /app/
 
 EXPOSE 8000
 
-ENTRYPOINT ["/usr/local/bin/gunicorn", "--config", "/gunicorn.conf", "--log-config", "/logging.conf", "-b", ":8000", "myapp:app"]
+ENTRYPOINT ["/usr/local/bin/gunicorn", "--config", "/app/gunicorn.conf", "--log-config", "/app/logging.conf", "-b", ":8000", "myapp:app"]

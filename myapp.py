@@ -9,7 +9,8 @@ def app(environ, start_response):
     if path == '/exception':
         raise Exception('My exception!')
 
-    data = "Request on %s \n" % path
+    data_str = "Request on %s \n" % path
+    data = data_str.encode('utf-8')
     logger.info(data, extra={'tags': ['role:web', 'env:prod']})
     start_response("200 OK", [
           ("Content-Type", "text/plain"),
